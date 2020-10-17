@@ -12,15 +12,19 @@ namespace dotNET_Chat_Server.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        [Required]
         public string Text { get; set; }
+        [Required]
         public DateTime CreationTime { get; set; }
 
-        [ForeignKey("AuthorId")]
+        //[ForeignKey("AuthorId")]
+        [Required]
         public ApplicationUser Author { get; set; }
-        public Guid AuthorId { get; set; }
+        //public Guid AuthorId { get; set; }
 
-        [ForeignKey("RecipientId")]
+        //[ForeignKey("RecipientId")]
+        //[Required]
         public ApplicationUser Recipient { get; set; }
-        public Guid RecipientId { get; set; }
+        //public Guid? RecipientId { get; set; }
     }
 }

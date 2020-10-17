@@ -13,5 +13,8 @@ namespace dotNET_Chat_Server.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override Guid Id { get => base.Id; set => base.Id = value; }
+
+        public List<Message> CreatedMessages { get; set; } = new List<Message>();
+        public List<Message> ReceivedMessages { get; set; } = new List<Message>();
     }
 }
