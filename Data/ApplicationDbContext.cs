@@ -21,12 +21,19 @@ namespace dotNET_Chat_Server.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>(this));
-            ApplicationUser user1 = new ApplicationUser();
-            ApplicationUser user2 = new ApplicationUser();
+            ApplicationUser user1 = new ApplicationUser()
+            {
+                Id = Guid.NewGuid(),
+            };
+            ApplicationUser user2 = new ApplicationUser()
+            {
+                Id = Guid.NewGuid(),
+            };
             Message message = new Message()
             {
-                Author = user1,
-                Recipient = user2,
+                Id = Guid.NewGuid(),
+                AuthorId = user1.Id,
+                RecipientId = user2.Id,
                 Text = "abc",
                 CreationTime = DateTime.Now,
             };
