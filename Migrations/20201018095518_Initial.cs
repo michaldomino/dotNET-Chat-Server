@@ -47,6 +47,19 @@ namespace dotNET_Chat_Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RandomModels",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Number = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RandomModels", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -179,6 +192,11 @@ namespace dotNET_Chat_Server.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.InsertData(
+                table: "RandomModels",
+                columns: new[] { "Id", "Name", "Number" },
+                values: new object[] { new Guid("7a7f8f9c-4647-4db5-b564-d0097caf5c18"), "a", 5 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -248,6 +266,9 @@ namespace dotNET_Chat_Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "RandomModels");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

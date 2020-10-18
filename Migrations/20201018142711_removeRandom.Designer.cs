@@ -10,14 +10,14 @@ using dotNET_Chat_Server.Data;
 namespace dotNET_Chat_Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201017175659_Initial")]
-    partial class Initial
+    [Migration("20201018142711_removeRandom")]
+    partial class removeRandom
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
