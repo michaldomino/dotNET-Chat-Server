@@ -23,6 +23,12 @@ namespace dotNET_Chat_Server.Controllers
         public async Task<IActionResult> RegisterApplicationUser([FromBody] ApplicationUserRegisterRequestModel requestModel)
         {
             var response = await authenticationService.RegisterApplicationUserAsync(requestModel);
+            if (!response.Success)
+            {
+                return new BadRequestObjectResult(response);
+            }
+
+            return Ok(response);
         }
     }
 }

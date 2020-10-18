@@ -47,6 +47,28 @@ namespace dotNET_Chat_Server.Service
                     Errors = createdUser.Errors.Select(it => it.Description)
                 };
             }
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(jwtOptions.Key);
+            SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, newUser.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
+                    new Claim("id", newUser.Id.ToString()),
+                }),
+                //Expires = DateTime.UtcNow.AddDays(1);
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature),
+            };
+
+            SecurityToken securityToken = tokenHandler.CreateToken(securityTokenDescriptor);
+            return new AuthenticationResponseModel
+            {
+                Success = true,
+                Token = tokenHandler.WriteToken(securityToken),
+            };
         }
     }
 }
