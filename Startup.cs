@@ -17,6 +17,7 @@ using dotNET_Chat_Server.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using dotNET_Chat_Server.Service;
 
 namespace dotNET_Chat_Server
 {
@@ -38,6 +39,8 @@ namespace dotNET_Chat_Server
             JwtOptions jwtOptions = new JwtOptions();
             Configuration.Bind(nameof(JwtOptions), jwtOptions);
             services.AddSingleton(jwtOptions);
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddAuthentication(it =>
             {
