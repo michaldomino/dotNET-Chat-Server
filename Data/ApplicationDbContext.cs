@@ -19,7 +19,6 @@ namespace dotNET_Chat_Server.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<RandomModel> RandomModels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,15 +28,6 @@ namespace dotNET_Chat_Server.Data
                 .HasOne(m => m.Author)
                 .WithMany(a => a.CreatedMessages)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            RandomModel randomModel = new RandomModel()
-            {
-                Id = Guid.NewGuid(),
-                Name = "a",
-                Number = 5,
-            };
-            builder.Entity<RandomModel>().HasData(randomModel);
-
 
             //builder.Entity<Message>()
             //    .HasOne(m => m.Recipient)
