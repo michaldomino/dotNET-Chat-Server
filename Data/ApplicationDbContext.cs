@@ -10,6 +10,8 @@ namespace dotNET_Chat_Server.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
+        private readonly UserManager<ApplicationUser> userManager;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -17,6 +19,7 @@ namespace dotNET_Chat_Server.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<RandomModel> RandomModels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,16 +30,31 @@ namespace dotNET_Chat_Server.Data
                 .WithMany(a => a.CreatedMessages)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            RandomModel randomModel = new RandomModel()
+            {
+                Id = Guid.NewGuid(),
+                Name = "a",
+                Number = 5,
+            };
+            builder.Entity<RandomModel>().HasData(randomModel);
+
+
             //builder.Entity<Message>()
             //    .HasOne(m => m.Recipient)
             //    .WithMany(r => r.ReceivedMessages)
             //    .OnDelete(DeleteBehavior.SetNull);
 
             //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>(this));
+            //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>(this));
             //ApplicationUser user1 = new ApplicationUser()
             //{
-            //    Id = Guid.NewGuid(),
+            //    UserName = "Abc",
+            //    Email = "abc@def.com"
             //};
+            //userManager.CreateAsync(user1, "abc");
+
+
+
             //ApplicationUser user2 = new ApplicationUser()
             //{
             //    Id = Guid.NewGuid(),
