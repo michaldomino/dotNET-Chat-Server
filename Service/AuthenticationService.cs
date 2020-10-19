@@ -31,39 +31,74 @@ namespace dotNET_Chat_Server.Service
             {
                 return new AuthenticationResponseModel
                 {
+                    Success = false,
                     Errors = new[] { $"User name {requestModel.UserName} already exists." }
                 };
             }
-            ApplicationUser newUser = new ApplicationUser
+
+            var newUser = new ApplicationUser
             {
                 UserName = requestModel.UserName,
                 Email = requestModel.Email,
             };
-            IdentityResult createdUser = await userManager.CreateAsync(newUser, requestModel.Password);
+
+            var createdUser = await userManager.CreateAsync(newUser, requestModel.Password);
             if (!createdUser.Succeeded)
             {
                 return new AuthenticationResponseModel
                 {
+                    Success = false,
                     Errors = createdUser.Errors.Select(it => it.Description)
                 };
             }
 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            return GenerateSecurityToken(newUser);
+        }
+
+        public async Task<AuthenticationResponseModel> LoginApplicationUserAsync(ApplicationUserLoginRequestModel requestModel)
+        {
+            var loggedUser = await userManager.FindByNameAsync(requestModel.UserName);
+            if (loggedUser == null)
+            {
+                return new AuthenticationResponseModel
+                {
+                    Success = false,
+                    Errors = new[] { $"User name {requestModel.UserName} does not exist." }
+                };
+            }
+
+            var isPasswordValid = await userManager.CheckPasswordAsync(loggedUser, requestModel.Password);
+            if (!isPasswordValid)
+            {
+                return new AuthenticationResponseModel
+                {
+                    Success = false,
+                    Errors = new[] { "Wrong username or password" }
+                };
+            }
+
+            return GenerateSecurityToken(loggedUser);
+        }
+
+        private AuthenticationResponseModel GenerateSecurityToken(ApplicationUser applicationUser)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(jwtOptions.Key);
-            SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
+
+            var securityTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, newUser.UserName),
+                    new Claim(JwtRegisteredClaimNames.Sub, applicationUser.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-                    new Claim("id", newUser.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
+                    new Claim("id", applicationUser.Id.ToString()),
                 }),
                 //Expires = DateTime.UtcNow.AddDays(1);
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature),
             };
 
-            SecurityToken securityToken = tokenHandler.CreateToken(securityTokenDescriptor);
+            var securityToken = tokenHandler.CreateToken(securityTokenDescriptor);
             return new AuthenticationResponseModel
             {
                 Success = true,
