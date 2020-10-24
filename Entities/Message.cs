@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dotNET_Chat_Server.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,19 +13,19 @@ namespace dotNET_Chat_Server.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        [Required]
+
         public string Text { get; set; }
-        [Required]
+
         public DateTime CreationTime { get; set; }
 
-        //[ForeignKey("AuthorId")]
-        [Required]
-        public ApplicationUser Author { get; set; }
-        //public Guid AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
 
-        //[ForeignKey("RecipientId")]
-        //[Required]
-        public ApplicationUser Recipient { get; set; }
-        //public Guid? RecipientId { get; set; }
+        [ForeignKey(nameof(AuthorId))]
+        public ApplicationUser Author { get; set; }
+        
+        public Guid ChatId { get; set; }
+
+        [ForeignKey(nameof(ChatId))]
+        public Chat Chat { get; set; }
     }
 }

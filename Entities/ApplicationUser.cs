@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using dotNET_Chat_Server.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +11,18 @@ namespace dotNET_Chat_Server.Models
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
+        public ApplicationUser()
+        {
+            CreatedMessages = new HashSet<Message>();
+            ApplicationUserChats = new HashSet<ApplicationUserChat>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override Guid Id { get => base.Id; set => base.Id = value; }
 
-        public List<Message> CreatedMessages { get; set; } = new List<Message>();
-        public List<Message> ReceivedMessages { get; set; } = new List<Message>();
+        public virtual ICollection<Message> CreatedMessages { get; set; }
+
+        public virtual ICollection<ApplicationUserChat> ApplicationUserChats { get; set; }
     }
 }
