@@ -8,27 +8,44 @@ using Microsoft.EntityFrameworkCore;
 using dotNET_Chat_Server.Data;
 using Microsoft.AspNetCore.Identity;
 using dotNET_Chat_Server.Entities;
+using dotNET_Chat_Server.Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using dotNET_Chat_Server.Extensions;
+using dotNET_Chat_Server.ValueModels;
 
 namespace dotNET_Chat_Server.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
-    [ApiController]
+    //[ApiController]
     public class ApplicationUsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IApplicationUserService applicationUserService;
 
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             this.userManager = userManager;
+            this.applicationUserService = new ApplicationUserService(context, userManager);
         }
 
         // GET: api/ApplicationUsers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetApplicationUsers()
         {
-            return await _context.ApplicationUsers.ToListAsync();
+            var users = await _context.ApplicationUsers.ToListAsync();
+            return Ok(users);
+        }
+
+        [HttpGet(RoutesModel.Api.Users.Chats)]
+        public async Task<ActionResult<IEnumerable<Chat>>> GetChats()
+        {
+            var userId = HttpContext.GetUserId();
+            List<Chat> chats = await applicationUserService.GetChatsAsync(userId);
+            return Ok(chats);
         }
 
         // GET: api/ApplicationUsers/5

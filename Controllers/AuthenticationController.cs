@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace dotNET_Chat_Server.Controllers
 {
+    [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService authenticationService;
