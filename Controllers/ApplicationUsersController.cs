@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using dotNET_Chat_Server.Data;
-using dotNET_Chat_Server.Models;
 using Microsoft.AspNetCore.Identity;
+using dotNET_Chat_Server.Entities;
 
 namespace dotNET_Chat_Server.Controllers
 {

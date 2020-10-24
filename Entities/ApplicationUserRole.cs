@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotNET_Chat_Server.Models
+namespace dotNET_Chat_Server.Entities
 {
     public class ApplicationUserRole : IdentityUserRole<Guid>
     {

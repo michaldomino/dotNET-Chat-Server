@@ -1,5 +1,4 @@
-﻿using dotNET_Chat_Server.Models;
-using dotNET_Chat_Server.Models.Request;
+﻿using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Service;
 using dotNET_Chat_Server.ValueModels;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace dotNET_Chat_Server.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService authenticationService;
 

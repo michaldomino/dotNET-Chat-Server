@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotNET_Chat_Server.Models
+namespace dotNET_Chat_Server.Entities
 {
     public class ApplicationUser : IdentityUser<Guid>
     {

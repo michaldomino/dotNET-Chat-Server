@@ -12,12 +12,12 @@ using dotNET_Chat_Server.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using dotNET_Chat_Server.Models;
 using dotNET_Chat_Server.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using dotNET_Chat_Server.Service;
+using dotNET_Chat_Server.Entities;
 
 namespace dotNET_Chat_Server
 {
