@@ -27,7 +27,7 @@ namespace dotNET_Chat_Server.Service
             return new CreatedChatResponseModel { Id = chat.Id, Name = chat.Name };
         }
 
-        public async Task<CreatedMessageResponseModel> AddMessageToChatAsync(Guid chatId, Guid userId, NewMessageRequestModel requestModel)
+        public async Task<MessageResponseModel> AddMessageToChatAsync(Guid chatId, Guid userId, NewMessageRequestModel requestModel)
         {
             var chat = await GetChat(chatId);
             ApplicationUserService applicationUserService = new ApplicationUserService(context);
@@ -41,11 +41,13 @@ namespace dotNET_Chat_Server.Service
             };
             chat.Messages.Add(newMessage);
             await context.SaveChangesAsync();
-            return new CreatedMessageResponseModel
+            return new MessageResponseModel
             {
                 Id = newMessage.Id,
                 CreationTime = newMessage.CreationTime,
-                Text = newMessage.Text
+                Text = newMessage.Text,
+                AuthorId = newMessage.AuthorId,
+                AuthorUserName = newMessage.Author.UserName
             };
         }
 
@@ -83,6 +85,19 @@ namespace dotNET_Chat_Server.Service
         public Task<List<ApplicationUser>> GetChatMembers(Guid chatId)
         {
             return context.ApplicationUserChats.Where(it => it.ChatId == chatId).Select(it => it.ApplicationUser).ToListAsync();
+        }
+
+        public Task<List<MessageResponseModel>> GetMessages(Guid chatId)
+        {
+            var chatMessages = context.Messages.Where(it => it.ChatId == chatId);
+            return chatMessages.Select(it => new MessageResponseModel
+            {
+                Id = it.Id,
+                AuthorId = it.AuthorId,
+                AuthorUserName = it.Author.UserName,
+                CreationTime = it.CreationTime,
+                Text = it.Text
+            }).ToListAsync();
         }
     }
 }

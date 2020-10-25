@@ -48,11 +48,18 @@ namespace dotNET_Chat_Server.Controllers
         }
 
         [HttpPost(RoutesModel.Api.Chats.SendMessage + "/{chatId}")]
-        public async Task<ActionResult<AddUsersToChatResponseModel>> SendMessage(Guid chatId, [FromBody] NewMessageRequestModel requestModel)
+        public async Task<ActionResult<MessageResponseModel>> SendMessage(Guid chatId, [FromBody] NewMessageRequestModel requestModel)
         {
             Guid userId = HttpContext.GetUserId();
-            CreatedMessageResponseModel createdMessage = await chatService.AddMessageToChatAsync(chatId, userId, requestModel);
+            MessageResponseModel createdMessage = await chatService.AddMessageToChatAsync(chatId, userId, requestModel);
             return CreatedAtAction("SendMessage", new { id = createdMessage.Id }, createdMessage);
+        }
+
+        [HttpGet(RoutesModel.Api.Chats.GetMessages + "/{chatId}")]
+        public async Task<ActionResult<List<MessageResponseModel>>> GetMessage(Guid chatId)
+        {
+            List<MessageResponseModel> messages = await chatService.GetMessages(chatId);
+            return Ok(messages);
         }
     }
 }
