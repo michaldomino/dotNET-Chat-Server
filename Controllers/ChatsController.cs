@@ -13,10 +13,11 @@ using dotNET_Chat_Server.ValueModels;
 using dotNET_Chat_Server.Service;
 using dotNET_Chat_Server.Models.Response;
 using dotNET_Chat_Server.Models.Request;
+using dotNET_Chat_Server.Extensions;
 
 namespace dotNET_Chat_Server.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ChatsController : ControllerBase
     {
@@ -44,6 +45,14 @@ namespace dotNET_Chat_Server.Controllers
         {
             AddUsersToChatResponseModel addUsersToChatResponseModel = await chatService.AddUsersToChatAsync(chatId, requestModel);
             return Ok(addUsersToChatResponseModel);
+        }
+
+        [HttpPost(RoutesModel.Api.Chats.SendMessage + "/{chatId}")]
+        public async Task<ActionResult<AddUsersToChatResponseModel>> SendMessage(Guid chatId, [FromBody] NewMessageRequestModel requestModel)
+        {
+            Guid userId = HttpContext.GetUserId();
+            CreatedMessageResponseModel createdMessage = await chatService.AddMessageToChatAsync(chatId, userId, requestModel);
+            return CreatedAtAction("SendMessage", new { id = createdMessage.Id }, createdMessage);
         }
     }
 }

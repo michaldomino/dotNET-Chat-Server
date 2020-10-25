@@ -2,6 +2,7 @@
 using dotNET_Chat_Server.Entities;
 using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Models.Response;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,28 @@ namespace dotNET_Chat_Server.Service
             await context.Chats.AddAsync(chat);
             await context.SaveChangesAsync();
             return new CreatedChatResponseModel { Id = chat.Id, Name = chat.Name };
+        }
+
+        public async Task<CreatedMessageResponseModel> AddMessageToChatAsync(Guid chatId, Guid userId, NewMessageRequestModel requestModel)
+        {
+            var chat = await GetChat(chatId);
+            ApplicationUserService applicationUserService = new ApplicationUserService(context);
+            ApplicationUser loggedUser = await applicationUserService.GetUser(userId);
+            Message newMessage = new Message
+            {
+                Author = loggedUser,
+                Chat = chat,
+                CreationTime = DateTime.UtcNow,
+                Text = requestModel.Text
+            };
+            chat.Messages.Add(newMessage);
+            await context.SaveChangesAsync();
+            return new CreatedMessageResponseModel
+            {
+                Id = newMessage.Id,
+                CreationTime = newMessage.CreationTime,
+                Text = newMessage.Text
+            };
         }
 
         public async Task<AddUsersToChatResponseModel> AddUsersToChatAsync(Guid chatId, AddUsersToChatRequestModel requestModel)
