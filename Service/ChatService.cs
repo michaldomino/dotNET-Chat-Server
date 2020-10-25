@@ -28,36 +28,38 @@ namespace dotNET_Chat_Server.Service
 
         public async Task<AddUsersToChatResponseModel> AddUsersToChatAsync(Guid chatId, AddUsersToChatRequestModel requestModel)
         {
-            var newApplicationUsersChats = requestModel.UsersIds.Select(it => new ApplicationUserChat { ApplicationUserId = it, ChatId = chatId });
-            var existingApplicationUsersChats = context.ApplicationUserChats;
-            HashSet<Tuple<Guid, Guid>> applicationUserChatsToExclude =
-                new HashSet<Tuple<Guid, Guid>>(existingApplicationUsersChats.Select(it => new Tuple<Guid, Guid>(it.ApplicationUserId, it.ChatId)));
-
-            List<ApplicationUserChat> applicationUserChatsToAdd = newApplicationUsersChats
-                .Where(it => !applicationUserChatsToExclude.Contains(new Tuple<Guid, Guid>(it.ApplicationUserId, it.ChatId))).ToList();
             Chat chatToAddUsersTo = await GetChat(chatId);
-            ApplicationUserService applicationUserService = new ApplicationUserService(context);
-            foreach (ApplicationUserChat applicationUserChatToAdd in applicationUserChatsToAdd)
+            var chatMembersBeforeAdd = await GetChatMembers(chatId);
+            var chatMembersIdsBeforeAdd = chatMembersBeforeAdd.Select(it => it.Id);
+            var userIdsToAdd = requestModel.UsersIds.Where(it => !chatMembersIdsBeforeAdd.Contains(it));
+
+            var applictaionUsersToAdd = userIdsToAdd.Select(it => new ApplicationUserChat
             {
-                applicationUserChatToAdd.ApplicationUser = await applicationUserService.GetUser(applicationUserChatToAdd.ApplicationUserId);
-                applicationUserChatToAdd.Chat = chatToAddUsersTo;
-            }
-            await context.ApplicationUserChats.AddRangeAsync(applicationUserChatsToAdd);
+                ApplicationUserId = it,
+                ChatId = chatId
+            });
+            await context.ApplicationUserChats.AddRangeAsync(applictaionUsersToAdd);
             await context.SaveChangesAsync();
 
+            var chatMembersAfterAdd = await GetChatMembers(chatId);
             return new AddUsersToChatResponseModel
             {
-                CurrentChatUsers = applicationUserChatsToAdd.Select(it => new ApplicationUserSearchResponseModel
+                CurrentChatUsers = chatMembersAfterAdd.Select(it => new ApplicationUserSearchResponseModel
                 {
-                    Id = it.ApplicationUserId,
-                    UserName = it.ApplicationUser.UserName
+                    Id = it.Id,
+                    UserName = it.UserName
                 }).ToList()
             };
         }
 
-        public Task<Chat> GetChat(Guid id)
+        public Task<Chat> GetChat(Guid chatId)
         {
-            return context.Chats.FirstAsync(it => it.Id == id);
+            return context.Chats.FirstAsync(it => it.Id == chatId);
+        }
+
+        public Task<List<ApplicationUser>> GetChatMembers(Guid chatId)
+        {
+            return context.ApplicationUserChats.Where(it => it.ChatId == chatId).Select(it => it.ApplicationUser).ToListAsync();
         }
     }
 }

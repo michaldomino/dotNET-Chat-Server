@@ -12,7 +12,7 @@ namespace dotNET_Chat_Server.Service
     {
         Task<CreatedChatResponseModel> AddAsync(Chat chat);
         Task<AddUsersToChatResponseModel> AddUsersToChatAsync(Guid chatId, AddUsersToChatRequestModel requestModel);
-
-        Task<Chat> GetChat(Guid id);
+        Task<Chat> GetChat(Guid chatId);
+        Task<List<ApplicationUser>> GetChatMembers(Guid chatId);
     }
 }

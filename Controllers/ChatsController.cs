@@ -43,10 +43,7 @@ namespace dotNET_Chat_Server.Controllers
         public async Task<ActionResult<AddUsersToChatResponseModel>> AddUsersToChat(Guid chatId, [FromBody] AddUsersToChatRequestModel requestModel)
         {
             AddUsersToChatResponseModel addUsersToChatResponseModel = await chatService.AddUsersToChatAsync(chatId, requestModel);
-            var a = 0;
-            return Ok(new AddUsersToChatResponseModel());
-            //CreatedChatResponseModel createdChat = await chatService.AddAsync(chat);
-            //return CreatedAtAction("GetChat", new { id = chat.Id }, createdChat);
+            return Ok(addUsersToChatResponseModel);
         }
     }
 }
