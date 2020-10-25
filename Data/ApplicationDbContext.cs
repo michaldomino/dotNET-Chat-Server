@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using dotNET_Chat_Server.Models;
+using dotNET_Chat_Server.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +19,8 @@ namespace dotNET_Chat_Server.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<ApplicationUserChat> ApplicationUserChats { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,6 +31,15 @@ namespace dotNET_Chat_Server.Data
                 .WithMany(a => a.CreatedMessages)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<ApplicationUserChat>().HasKey(it => new { it.ApplicationUserId, it.ChatId });
+
+            //builder.Entity<ApplicationUserChat>()
+            //    .HasOne(it => it.ApplicationUser)
+            //    .WithMany(it => it.ApplicationUserChats);
+
+            //builder.Entity<ApplicationUserChat>()
+            //    .HasOne(it => it.Chat)
+            //    .WithMany(it => it.ApplicationUserChats);
             //builder.Entity<Message>()
             //    .HasOne(m => m.Recipient)
             //    .WithMany(r => r.ReceivedMessages)

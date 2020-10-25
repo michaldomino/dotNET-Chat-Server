@@ -12,7 +12,12 @@ using dotNET_Chat_Server.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using dotNET_Chat_Server.Models;
+using dotNET_Chat_Server.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using dotNET_Chat_Server.Service;
+using dotNET_Chat_Server.Entities;
 
 namespace dotNET_Chat_Server
 {
@@ -31,6 +36,32 @@ namespace dotNET_Chat_Server
             //services.AddIdentity<ApplicationUser, ApplicationRole>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>()
             //    .AddDefaultTokenProviders();
+            JwtOptions jwtOptions = new JwtOptions();
+            Configuration.Bind(nameof(JwtOptions), jwtOptions);
+            services.AddSingleton(jwtOptions);
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddAuthentication(it =>
+            {
+                it.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                it.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                it.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(it =>
+                {
+                    it.SaveToken = true;
+                    it.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Key)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        RequireExpirationTime = false,
+                        ValidateLifetime = true,
+                    };
+                });
+
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

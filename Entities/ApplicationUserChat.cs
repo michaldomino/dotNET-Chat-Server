@@ -7,21 +7,15 @@ using System.Threading.Tasks;
 
 namespace dotNET_Chat_Server.Entities
 {
-    public class Message
+    public class ApplicationUserChat
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public Guid ApplicationUserId { get; set; }
 
-        public string Text { get; set; }
+        [ForeignKey(nameof(ApplicationUserId))]
+        public ApplicationUser ApplicationUser { get; set; }
 
-        public DateTime CreationTime { get; set; }
-
-        public Guid AuthorId { get; set; }
-
-        [ForeignKey(nameof(AuthorId))]
-        public ApplicationUser Author { get; set; }
-        
+        [Key]
         public Guid ChatId { get; set; }
 
         [ForeignKey(nameof(ChatId))]

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotNET_Chat_Server.Data;
 
 namespace dotNET_Chat_Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201018095518_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,35 +126,6 @@ namespace dotNET_Chat_Server.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("dotNET_Chat_Server.Entities.ApplicationUserChat", b =>
-                {
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ApplicationUserId", "ChatId");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("ApplicationUserChats");
-                });
-
-            modelBuilder.Entity("dotNET_Chat_Server.Entities.Chat", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Chats");
-                });
-
             modelBuilder.Entity("dotNET_Chat_Server.Models.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -256,22 +229,48 @@ namespace dotNET_Chat_Server.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("RecipientId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("RecipientId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("dotNET_Chat_Server.Models.RandomModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RandomModels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7a7f8f9c-4647-4db5-b564-d0097caf5c18"),
+                            Name = "a",
+                            Number = 5
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -325,21 +324,6 @@ namespace dotNET_Chat_Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("dotNET_Chat_Server.Entities.ApplicationUserChat", b =>
-                {
-                    b.HasOne("dotNET_Chat_Server.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("ApplicationUserChats")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("dotNET_Chat_Server.Entities.Chat", "Chat")
-                        .WithMany("ApplicationUserChats")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("dotNET_Chat_Server.Models.Message", b =>
                 {
                     b.HasOne("dotNET_Chat_Server.Models.ApplicationUser", "Author")
@@ -348,11 +332,9 @@ namespace dotNET_Chat_Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("dotNET_Chat_Server.Entities.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("dotNET_Chat_Server.Models.ApplicationUser", "Recipient")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("RecipientId");
                 });
 #pragma warning restore 612, 618
         }
