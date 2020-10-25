@@ -23,14 +23,12 @@ namespace dotNET_Chat_Server.Controllers
     public class ApplicationUsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> userManager;
         private readonly IApplicationUserService applicationUserService;
 
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            this.userManager = userManager;
-            this.applicationUserService = new ApplicationUserService(context, userManager);
+            applicationUserService = new ApplicationUserService(context);
         }
 
         // GET: api/ApplicationUsers
