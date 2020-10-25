@@ -18,6 +18,7 @@ namespace dotNET_Chat_Server.ValueModels
             public static class Users
             {
                 public const string Chats = "Chats";
+                public const string Search = "Search";
             }
         }
     }

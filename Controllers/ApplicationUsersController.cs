@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using dotNET_Chat_Server.Extensions;
 using dotNET_Chat_Server.ValueModels;
+using dotNET_Chat_Server.Models.Response;
 
 namespace dotNET_Chat_Server.Controllers
 {
@@ -33,11 +34,10 @@ namespace dotNET_Chat_Server.Controllers
         }
 
         // GET: api/ApplicationUsers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetApplicationUsers()
+        [HttpGet(RoutesModel.Api.Users.Search)]
+        public async Task<ActionResult<IEnumerable<ApplicationUserSearchResponseModel>>> SearchApplicationUsers()
         {
-            var users = await _context.ApplicationUsers.ToListAsync();
-            return Ok(users);
+            return Ok(await applicationUserService.SearchAllUsersAsync());
         }
 
         [HttpGet(RoutesModel.Api.Users.Chats)]

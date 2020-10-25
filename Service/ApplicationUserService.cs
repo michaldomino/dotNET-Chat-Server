@@ -1,6 +1,8 @@
 ﻿using dotNET_Chat_Server.Data;
 using dotNET_Chat_Server.Entities;
+using dotNET_Chat_Server.Models.Response;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,14 @@ namespace dotNET_Chat_Server.Service
         {
             this.context = context;
             this.userManager = userManager;
+        }
+
+        public async Task<List<ApplicationUserSearchResponseModel>> SearchAllUsersAsync()
+        {
+            var users = context.ApplicationUsers;
+            return await users
+                .Select(it => new ApplicationUserSearchResponseModel { Id = it.Id, UserName = it.UserName })
+                .ToListAsync();
         }
 
         public List<Chat> GetChats(ApplicationUser applicationUser)
