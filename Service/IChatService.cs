@@ -14,5 +14,7 @@ namespace dotNET_Chat_Server.Service
         Task<AddUsersToChatResponseModel> AddUsersToChatAsync(Guid chatId, AddUsersToChatRequestModel requestModel);
         Task<Chat> GetChat(Guid chatId);
         Task<List<ApplicationUser>> GetChatMembers(Guid chatId);
+        Task<MessageResponseModel> AddMessageToChatAsync(Guid chatId, Guid userId, NewMessageRequestModel requestModel);
+        Task<List<MessageResponseModel>> GetMessages(Guid chatId);
     }
 }

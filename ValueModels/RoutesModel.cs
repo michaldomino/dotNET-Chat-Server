@@ -17,8 +17,10 @@ namespace dotNET_Chat_Server.ValueModels
 
             public static class Chats
             {
+                public const string AddUsers = "AddUsers";
                 public const string Create = "Create";
-                internal const string AddUsers = "AddUsers";
+                public const string GetMessages = "GetMessages";
+                public const string SendMessage = "SendMessage";
             }
 
             public static class Users
