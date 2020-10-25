@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using dotNET_Chat_Server.Extensions;
 using dotNET_Chat_Server.ValueModels;
+using dotNET_Chat_Server.Models.Response;
 
 namespace dotNET_Chat_Server.Controllers
 {
@@ -22,22 +23,19 @@ namespace dotNET_Chat_Server.Controllers
     public class ApplicationUsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> userManager;
         private readonly IApplicationUserService applicationUserService;
 
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            this.userManager = userManager;
-            this.applicationUserService = new ApplicationUserService(context, userManager);
+            applicationUserService = new ApplicationUserService(context);
         }
 
         // GET: api/ApplicationUsers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetApplicationUsers()
+        [HttpGet(RoutesModel.Api.Users.Search)]
+        public async Task<ActionResult<IEnumerable<ApplicationUserSearchResponseModel>>> SearchApplicationUsers()
         {
-            var users = await _context.ApplicationUsers.ToListAsync();
-            return Ok(users);
+            return Ok(await applicationUserService.SearchAllUsersAsync());
         }
 
         [HttpGet(RoutesModel.Api.Users.Chats)]
@@ -45,85 +43,12 @@ namespace dotNET_Chat_Server.Controllers
         {
             var userId = HttpContext.GetUserId();
             List<Chat> chats = await applicationUserService.GetChatsAsync(userId);
-            return Ok(chats);
-        }
-
-        // GET: api/ApplicationUsers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ApplicationUser>> GetApplicationUser(Guid id)
-        {
-            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
-
-            if (applicationUser == null)
+            List<ChatResponseModel> chatResponseModels = chats.Select(it => new ChatResponseModel
             {
-                return NotFound();
-            }
-
-            return applicationUser;
-        }
-
-        // PUT: api/ApplicationUsers/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutApplicationUser(Guid id, ApplicationUser applicationUser)
-        {
-            if (id != applicationUser.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(applicationUser).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ApplicationUserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/ApplicationUsers
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<ApplicationUser>> PostApplicationUser(ApplicationUser applicationUser)
-        {
-            _context.ApplicationUsers.Add(applicationUser);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetApplicationUser", new { id = applicationUser.Id }, applicationUser);
-        }
-
-        // DELETE: api/ApplicationUsers/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ApplicationUser>> DeleteApplicationUser(Guid id)
-        {
-            var applicationUser = await _context.ApplicationUsers.FindAsync(id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            _context.ApplicationUsers.Remove(applicationUser);
-            await _context.SaveChangesAsync();
-
-            return applicationUser;
-        }
-
-        private bool ApplicationUserExists(Guid id)
-        {
-            return _context.ApplicationUsers.Any(e => e.Id == id);
+                Id = it.Id,
+                Name = it.Name
+            }).ToList();
+            return Ok(chatResponseModels);
         }
     }
 }

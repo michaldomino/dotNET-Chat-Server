@@ -33,6 +33,16 @@ namespace dotNET_Chat_Server.Data
 
             builder.Entity<ApplicationUserChat>().HasKey(it => new { it.ApplicationUserId, it.ChatId });
 
+            builder.Entity<ApplicationUserChat>()
+                .HasOne(it => it.ApplicationUser)
+                .WithMany(it => it.ApplicationUserChats)
+                .HasForeignKey(it => it.ApplicationUserId);
+
+            builder.Entity<ApplicationUserChat>()
+                .HasOne(it => it.Chat)
+                .WithMany(it => it.ApplicationUserChats)
+                .HasForeignKey(it => it.ChatId);
+
             //builder.Entity<ApplicationUserChat>()
             //    .HasOne(it => it.ApplicationUser)
             //    .WithMany(it => it.ApplicationUserChats);
