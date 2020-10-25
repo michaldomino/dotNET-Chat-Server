@@ -10,7 +10,7 @@ namespace dotNET_Chat_Server.Service
 {
     public interface IApplicationUserService
     {
-        List<Chat> GetChats(ApplicationUser applicationUser);
+        Task<List<Chat>> GetChatsAsync(ApplicationUser applicationUser);
         Task<List<Chat>> GetChatsAsync(Guid userId);
         Task<ApplicationUser> GetUser(Guid id);
         Task<List<ApplicationUserSearchResponseModel>> SearchAllUsersAsync();

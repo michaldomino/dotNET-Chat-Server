@@ -43,7 +43,12 @@ namespace dotNET_Chat_Server.Controllers
         {
             var userId = HttpContext.GetUserId();
             List<Chat> chats = await applicationUserService.GetChatsAsync(userId);
-            return Ok(chats);
+            List<ChatResponseModel> chatResponseModels = chats.Select(it => new ChatResponseModel
+            {
+                Id = it.Id,
+                Name = it.Name
+            }).ToList();
+            return Ok(chatResponseModels);
         }
 
         // GET: api/ApplicationUsers/5

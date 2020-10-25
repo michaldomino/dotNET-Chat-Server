@@ -37,23 +37,17 @@ namespace dotNET_Chat_Server.Service
                 .Where(it => !applicationUserChatsToExclude.Contains(new Tuple<Guid, Guid>(it.ApplicationUserId, it.ChatId))).ToList();
             Chat chatToAddUsersTo = await GetChat(chatId);
             ApplicationUserService applicationUserService = new ApplicationUserService(context);
-            List<ApplicationUserChat> applicationUserChatsToAdd2 = new List<ApplicationUserChat>();
             foreach (ApplicationUserChat applicationUserChatToAdd in applicationUserChatsToAdd)
             {
-                applicationUserChatsToAdd2.Add(new ApplicationUserChat
-                {
-                    ApplicationUser = await applicationUserService.GetUser(applicationUserChatToAdd.ApplicationUserId),
-                    Chat = chatToAddUsersTo
-                });
-                //applicationUserChatToAdd.ApplicationUser = 
-                //applicationUserChatToAdd.Chat = chatToAddUsersTo;
+                applicationUserChatToAdd.ApplicationUser = await applicationUserService.GetUser(applicationUserChatToAdd.ApplicationUserId);
+                applicationUserChatToAdd.Chat = chatToAddUsersTo;
             }
-            await context.ApplicationUserChats.AddRangeAsync(applicationUserChatsToAdd2);
+            await context.ApplicationUserChats.AddRangeAsync(applicationUserChatsToAdd);
             await context.SaveChangesAsync();
 
             return new AddUsersToChatResponseModel
             {
-                CurrentChatUsers = applicationUserChatsToAdd2.Select(it => new ApplicationUserSearchResponseModel
+                CurrentChatUsers = applicationUserChatsToAdd.Select(it => new ApplicationUserSearchResponseModel
                 {
                     Id = it.ApplicationUserId,
                     UserName = it.ApplicationUser.UserName

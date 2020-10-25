@@ -27,15 +27,15 @@ namespace dotNET_Chat_Server.Service
                 .ToListAsync();
         }
 
-        public List<Chat> GetChats(ApplicationUser applicationUser)
+        public Task<List<Chat>> GetChatsAsync(ApplicationUser applicationUser)
         {
-            return context.ApplicationUserChats.Where(it => it.ApplicationUserId == applicationUser.Id).Select(it => it.Chat).ToList();
+            return context.ApplicationUserChats.Where(it => it.ApplicationUserId == applicationUser.Id).Select(it => it.Chat).ToListAsync(); 
         }
 
         public async Task<List<Chat>> GetChatsAsync(Guid userId)
         {
             ApplicationUser applicationUser = await GetUser(userId);
-            return GetChats(applicationUser);
+            return await GetChatsAsync(applicationUser);
         }
 
         public Task<ApplicationUser> GetUser(Guid id)
