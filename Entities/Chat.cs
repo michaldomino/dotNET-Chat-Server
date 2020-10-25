@@ -8,6 +8,7 @@ namespace dotNET_Chat_Server.Entities
     {
         public Chat()
         {
+            Messages = new HashSet<Message>();
             ApplicationUserChats = new HashSet<ApplicationUserChat>();
         }
 
@@ -15,6 +16,8 @@ namespace dotNET_Chat_Server.Entities
         public Guid Id { get; set; }
 
         public string Name { get; set; }
+
+        public virtual ICollection<Message> Messages { get; set; }
 
         public virtual ICollection<ApplicationUserChat> ApplicationUserChats { get; set; }
     }
