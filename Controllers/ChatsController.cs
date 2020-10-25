@@ -29,59 +29,6 @@ namespace dotNET_Chat_Server.Controllers
             chatService = new ChatService(context);
         }
 
-        // GET: api/Chats
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Chat>>> GetChats()
-        {
-            return await _context.Chats.ToListAsync();
-        }
-
-        // GET: api/Chats/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Chat>> GetChat(Guid id)
-        {
-            var chat = await _context.Chats.FindAsync(id);
-
-            if (chat == null)
-            {
-                return NotFound();
-            }
-
-            return chat;
-        }
-
-        // PUT: api/Chats/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutChat(Guid id, Chat chat)
-        {
-            if (id != chat.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(chat).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ChatExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Chats
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -100,27 +47,6 @@ namespace dotNET_Chat_Server.Controllers
             return Ok(new AddUsersToChatResponseModel());
             //CreatedChatResponseModel createdChat = await chatService.AddAsync(chat);
             //return CreatedAtAction("GetChat", new { id = chat.Id }, createdChat);
-        }
-
-        // DELETE: api/Chats/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Chat>> DeleteChat(Guid id)
-        {
-            var chat = await _context.Chats.FindAsync(id);
-            if (chat == null)
-            {
-                return NotFound();
-            }
-
-            _context.Chats.Remove(chat);
-            await _context.SaveChangesAsync();
-
-            return chat;
-        }
-
-        private bool ChatExists(Guid id)
-        {
-            return _context.Chats.Any(e => e.Id == id);
         }
     }
 }
