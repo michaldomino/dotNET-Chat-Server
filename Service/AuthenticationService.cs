@@ -41,13 +41,13 @@ namespace dotNET_Chat_Server.Service
                 Email = requestModel.Email,
             };
 
-            var createdUser = await userManager.CreateAsync(newUser, requestModel.Password);
-            if (!createdUser.Succeeded)
+            var identityResult = await userManager.CreateAsync(newUser, requestModel.Password);
+            if (!identityResult.Succeeded)
             {
                 return new AuthenticationResponseModel
                 {
                     Success = false,
-                    Errors = createdUser.Errors.Select(it => it.Description)
+                    Errors = identityResult.Errors.Select(it => it.Description)
                 };
             }
 
