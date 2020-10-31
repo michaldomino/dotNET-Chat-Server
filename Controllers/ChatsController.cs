@@ -36,6 +36,13 @@ namespace dotNET_Chat_Server.Controllers
         public async Task<ActionResult<CreatedChatResponseModel>> PostChat([FromBody] Chat chat)
         {
             CreatedChatResponseModel createdChat = await chatService.AddAsync(chat);
+            Guid userId = HttpContext.GetUserId();
+            await chatService.AddUsersToChatAsync(
+                chat.Id,
+                new AddUsersToChatRequestModel
+                {
+                    UsersIds = new Guid[] { userId }
+                });
             return CreatedAtAction("GetChat", new { id = chat.Id }, createdChat);
         }
 
