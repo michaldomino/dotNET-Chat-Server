@@ -7,6 +7,6 @@ namespace dotNET_Chat_Server.Models.Response
 {
     public class AddUsersToChatResponseModel
     {
-        public ICollection<ApplicationUserSearchResponseModel> CurrentChatUsers { get; set; }
+        public ICollection<ApplicationUserResponseModel> CurrentChatUsers { get; set; }
     }
 }

@@ -22,22 +22,21 @@ namespace dotNET_Chat_Server.Controllers
     //[ApiController]
     public class ApplicationUsersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IApplicationUserService applicationUserService;
 
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
             applicationUserService = new ApplicationUserService(context);
         }
 
         // GET: api/ApplicationUsers
         [HttpGet(RoutesModel.Api.Users.Search)]
-        public async Task<ActionResult<IEnumerable<ApplicationUserSearchResponseModel>>> SearchApplicationUsers()
+        public async Task<ActionResult<IEnumerable<ApplicationUserResponseModel>>> SearchApplicationUsers()
         {
             return Ok(await applicationUserService.SearchAllUsersAsync());
         }
 
+        // GET: api/applicationusers/chats
         [HttpGet(RoutesModel.Api.Users.Chats)]
         public async Task<ActionResult<IEnumerable<Chat>>> GetChats()
         {
