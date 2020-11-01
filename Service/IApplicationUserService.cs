@@ -13,6 +13,6 @@ namespace dotNET_Chat_Server.Service
         Task<List<Chat>> GetChatsAsync(ApplicationUser applicationUser);
         Task<List<Chat>> GetChatsAsync(Guid userId);
         Task<ApplicationUser> GetUser(Guid id);
-        Task<List<ApplicationUserSearchResponseModel>> SearchAllUsersAsync();
+        Task<List<ApplicationUserResponseModel>> SearchAllUsersAsync();
     }
 }

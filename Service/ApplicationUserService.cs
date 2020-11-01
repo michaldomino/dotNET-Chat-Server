@@ -19,11 +19,11 @@ namespace dotNET_Chat_Server.Service
             this.context = context;
         }
 
-        public async Task<List<ApplicationUserSearchResponseModel>> SearchAllUsersAsync()
+        public async Task<List<ApplicationUserResponseModel>> SearchAllUsersAsync()
         {
             var users = context.ApplicationUsers;
             return await users
-                .Select(it => new ApplicationUserSearchResponseModel { Id = it.Id, UserName = it.UserName })
+                .Select(it => new ApplicationUserResponseModel { Id = it.Id, UserName = it.UserName })
                 .ToListAsync();
         }
 

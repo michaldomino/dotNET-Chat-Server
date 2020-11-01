@@ -14,6 +14,7 @@ using dotNET_Chat_Server.Service;
 using dotNET_Chat_Server.Models.Response;
 using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace dotNET_Chat_Server.Controllers
 {
@@ -21,12 +22,10 @@ namespace dotNET_Chat_Server.Controllers
     [Route("api/[controller]")]
     public class ChatsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IChatService chatService;
 
         public ChatsController(ApplicationDbContext context)
         {
-            _context = context;
             chatService = new ChatService(context);
         }
 
@@ -37,12 +36,24 @@ namespace dotNET_Chat_Server.Controllers
         public async Task<ActionResult<CreatedChatResponseModel>> PostChat([FromBody] Chat chat)
         {
             CreatedChatResponseModel createdChat = await chatService.AddAsync(chat);
+            Guid userId = HttpContext.GetUserId();
+            await chatService.AddUsersToChatAsync(
+                chat.Id,
+                new AddUsersToChatRequestModel
+                {
+                    UsersIds = new Guid[] { userId }
+                });
             return CreatedAtAction("GetChat", new { id = chat.Id }, createdChat);
         }
 
         [HttpPost(RoutesModel.Api.Chats.AddUsers + "/{chatId}")]
         public async Task<ActionResult<AddUsersToChatResponseModel>> AddUsersToChat(Guid chatId, [FromBody] AddUsersToChatRequestModel requestModel)
         {
+            Guid userId = HttpContext.GetUserId();
+            if (!requestModel.UsersIds.Contains(userId))
+            {
+                requestModel.UsersIds.Add(userId);
+            }
             AddUsersToChatResponseModel addUsersToChatResponseModel = await chatService.AddUsersToChatAsync(chatId, requestModel);
             return Ok(addUsersToChatResponseModel);
         }
@@ -60,6 +71,18 @@ namespace dotNET_Chat_Server.Controllers
         {
             List<MessageResponseModel> messages = await chatService.GetMessages(chatId);
             return Ok(messages);
+        }
+
+        [HttpGet(RoutesModel.Api.Chats.GetMembers + "/{chatId}")]
+        public async Task<ActionResult<List<ApplicationUserResponseModel>>> GetMembers(Guid chatId)
+        {
+            List<ApplicationUser> chatMembers = await chatService.GetChatMembers(chatId);
+            List<ApplicationUserResponseModel> responseModels = chatMembers.Select(it => new ApplicationUserResponseModel
+            {
+                Id = it.Id,
+                UserName = it.UserName
+            }).ToList();
+            return Ok(responseModels);
         }
     }
 }

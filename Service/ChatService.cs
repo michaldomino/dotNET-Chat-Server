@@ -69,7 +69,7 @@ namespace dotNET_Chat_Server.Service
             var chatMembersAfterAdd = await GetChatMembers(chatId);
             return new AddUsersToChatResponseModel
             {
-                CurrentChatUsers = chatMembersAfterAdd.Select(it => new ApplicationUserSearchResponseModel
+                CurrentChatMembers = chatMembersAfterAdd.Select(it => new ApplicationUserResponseModel
                 {
                     Id = it.Id,
                     UserName = it.UserName
