@@ -72,5 +72,17 @@ namespace dotNET_Chat_Server.Controllers
             List<MessageResponseModel> messages = await chatService.GetMessages(chatId);
             return Ok(messages);
         }
+
+        [HttpGet(RoutesModel.Api.Chats.GetMembers + "/{chatId}")]
+        public async Task<ActionResult<List<ApplicationUserResponseModel>>> GetMembers(Guid chatId)
+        {
+            List<ApplicationUser> chatMembers = await chatService.GetChatMembers(chatId);
+            List<ApplicationUserResponseModel> responseModels = chatMembers.Select(it => new ApplicationUserResponseModel
+            {
+                Id = it.Id,
+                UserName = it.UserName
+            }).ToList();
+            return Ok(responseModels);
+        }
     }
 }
