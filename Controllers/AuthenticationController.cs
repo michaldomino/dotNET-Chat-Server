@@ -20,6 +20,7 @@ namespace dotNET_Chat_Server.Controllers
             this.authenticationService = authenticationService;
         }
 
+        // POST: api/Authentication/Register
         [HttpPost(RoutesModel.Api.Authentication.Register)]
         public async Task<IActionResult> RegisterApplicationUser([FromBody] ApplicationUserRegisterRequestModel requestModel)
         {
@@ -31,6 +32,7 @@ namespace dotNET_Chat_Server.Controllers
             return Ok(response);
         }
 
+        // POST: api/Authentication/Login
         [HttpPost(RoutesModel.Api.Authentication.Login)]
         public async Task<IActionResult> LoginApplicationUser([FromBody] ApplicationUserLoginRequestModel requestModel)
         {
