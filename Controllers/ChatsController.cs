@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using dotNET_Chat_Server.Data;
 using dotNET_Chat_Server.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +13,6 @@ using dotNET_Chat_Server.Service;
 using dotNET_Chat_Server.Models.Response;
 using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Extensions;
-using Microsoft.AspNetCore.Identity;
 
 namespace dotNET_Chat_Server.Controllers
 {

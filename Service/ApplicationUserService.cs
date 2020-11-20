@@ -1,7 +1,6 @@
 ﻿using dotNET_Chat_Server.Data;
 using dotNET_Chat_Server.Entities;
 using dotNET_Chat_Server.Models.Response;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -2,7 +2,6 @@
 using dotNET_Chat_Server.Entities;
 using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Models.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
