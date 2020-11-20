@@ -75,7 +75,6 @@ namespace dotNET_Chat_Server
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
             app.UseRouting();
 
