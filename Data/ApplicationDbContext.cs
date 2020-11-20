@@ -41,46 +41,6 @@ namespace dotNET_Chat_Server.Data
                 .WithMany(it => it.ApplicationUserChats)
                 .HasForeignKey(it => it.ChatId);
 
-            //builder.Entity<ApplicationUserChat>()
-            //    .HasOne(it => it.ApplicationUser)
-            //    .WithMany(it => it.ApplicationUserChats);
-
-            //builder.Entity<ApplicationUserChat>()
-            //    .HasOne(it => it.Chat)
-            //    .WithMany(it => it.ApplicationUserChats);
-            //builder.Entity<Message>()
-            //    .HasOne(m => m.Recipient)
-            //    .WithMany(r => r.ReceivedMessages)
-            //    .OnDelete(DeleteBehavior.SetNull);
-
-            //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>(this));
-            //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>(this));
-            //ApplicationUser user1 = new ApplicationUser()
-            //{
-            //    UserName = "Abc",
-            //    Email = "abc@def.com"
-            //};
-            //userManager.CreateAsync(user1, "abc");
-
-
-
-            //ApplicationUser user2 = new ApplicationUser()
-            //{
-            //    Id = Guid.NewGuid(),
-            //};
-            //Message message = new Message()
-            //{
-            //    Id = Guid.NewGuid(),
-            //    AuthorId = user1.Id,
-            //    RecipientId = user2.Id,
-            //    Text = "abc",
-            //    CreationTime = DateTime.Now,
-            //};
-
-            //builder.Entity<ApplicationUser>().HasData(user1);
-            //builder.Entity<ApplicationUser>().HasData(user2);
-            //builder.Entity<Message>().HasData(message);
-
             base.OnModelCreating(builder);
         }
     }
