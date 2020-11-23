@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using dotNET_Chat_Server.Data;
 using dotNET_Chat_Server.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +13,6 @@ using dotNET_Chat_Server.Service;
 using dotNET_Chat_Server.Models.Response;
 using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Extensions;
-using Microsoft.AspNetCore.Identity;
 
 namespace dotNET_Chat_Server.Controllers
 {
@@ -30,8 +28,6 @@ namespace dotNET_Chat_Server.Controllers
         }
 
         // POST: api/Chats
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<CreatedChatResponseModel>> PostChat([FromBody] Chat chat)
         {
@@ -46,6 +42,7 @@ namespace dotNET_Chat_Server.Controllers
             return CreatedAtAction("GetChat", new { id = chat.Id }, createdChat);
         }
 
+        // POST: api/Chats/AddUsers/{chatId}
         [HttpPost(RoutesModel.Api.Chats.AddUsers + "/{chatId}")]
         public async Task<ActionResult<AddUsersToChatResponseModel>> AddUsersToChat(Guid chatId, [FromBody] AddUsersToChatRequestModel requestModel)
         {
@@ -58,6 +55,7 @@ namespace dotNET_Chat_Server.Controllers
             return Ok(addUsersToChatResponseModel);
         }
 
+        // POST: api/Chats/SendMessage/{chatId}
         [HttpPost(RoutesModel.Api.Chats.SendMessage + "/{chatId}")]
         public async Task<ActionResult<MessageResponseModel>> SendMessage(Guid chatId, [FromBody] NewMessageRequestModel requestModel)
         {
@@ -66,6 +64,7 @@ namespace dotNET_Chat_Server.Controllers
             return CreatedAtAction("SendMessage", new { id = createdMessage.Id }, createdMessage);
         }
 
+        // GET: api/Chats/GetMessages/{chatId}
         [HttpGet(RoutesModel.Api.Chats.GetMessages + "/{chatId}")]
         public async Task<ActionResult<List<MessageResponseModel>>> GetMessage(Guid chatId)
         {
@@ -73,6 +72,7 @@ namespace dotNET_Chat_Server.Controllers
             return Ok(messages);
         }
 
+        // GET: api/Chats/GetMembers/{chatId}
         [HttpGet(RoutesModel.Api.Chats.GetMembers + "/{chatId}")]
         public async Task<ActionResult<List<ApplicationUserResponseModel>>> GetMembers(Guid chatId)
         {

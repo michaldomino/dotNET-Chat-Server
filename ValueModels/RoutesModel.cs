@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace dotNET_Chat_Server.ValueModels
+﻿namespace dotNET_Chat_Server.ValueModels
 {
     public static class RoutesModel
     {

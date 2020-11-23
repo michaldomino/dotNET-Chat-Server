@@ -1,11 +1,7 @@
 ﻿using dotNET_Chat_Server.Models.Request;
 using dotNET_Chat_Server.Service;
 using dotNET_Chat_Server.ValueModels;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace dotNET_Chat_Server.Controllers
@@ -20,6 +16,7 @@ namespace dotNET_Chat_Server.Controllers
             this.authenticationService = authenticationService;
         }
 
+        // POST: api/Authentication/Register
         [HttpPost(RoutesModel.Api.Authentication.Register)]
         public async Task<IActionResult> RegisterApplicationUser([FromBody] ApplicationUserRegisterRequestModel requestModel)
         {
@@ -31,6 +28,7 @@ namespace dotNET_Chat_Server.Controllers
             return Ok(response);
         }
 
+        // POST: api/Authentication/Login
         [HttpPost(RoutesModel.Api.Authentication.Login)]
         public async Task<IActionResult> LoginApplicationUser([FromBody] ApplicationUserLoginRequestModel requestModel)
         {

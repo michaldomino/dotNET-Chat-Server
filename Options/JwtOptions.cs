@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace dotNET_Chat_Server.Options
+﻿namespace dotNET_Chat_Server.Options
 {
     public class JwtOptions
     {

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using dotNET_Chat_Server.Data;
 using Microsoft.AspNetCore.Identity;
 using dotNET_Chat_Server.Entities;
@@ -29,14 +27,14 @@ namespace dotNET_Chat_Server.Controllers
             applicationUserService = new ApplicationUserService(context);
         }
 
-        // GET: api/ApplicationUsers
+        // GET: api/ApplicationUsers/Search
         [HttpGet(RoutesModel.Api.Users.Search)]
         public async Task<ActionResult<IEnumerable<ApplicationUserResponseModel>>> SearchApplicationUsers()
         {
             return Ok(await applicationUserService.SearchAllUsersAsync());
         }
 
-        // GET: api/applicationusers/chats
+        // GET: api/ApplicationUsers/Chats
         [HttpGet(RoutesModel.Api.Users.Chats)]
         public async Task<ActionResult<IEnumerable<Chat>>> GetChats()
         {
